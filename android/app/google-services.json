@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "369281638076",
+    "project_id": "manorama-delivery",
+    "storage_bucket": "manorama-delivery.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369281638076:android:4897997f05ef8e4392bab9",
+        "android_client_info": {
+          "package_name": "com.example.manorama_delivery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyNpQh0gFWAfQ37cpA5hzrO1tA9ym3giI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
