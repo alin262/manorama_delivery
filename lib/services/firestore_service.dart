@@ -81,7 +81,6 @@ class FirestoreService {
         .collection('deliveries')
         .where('shopId', isEqualTo: shopId)
         .where('type', isEqualTo: type)
-        .orderBy('deliveryDate', descending: true)
         .snapshots()
         .map(
           (snaps) => snaps.docs

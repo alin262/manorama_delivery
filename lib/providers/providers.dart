@@ -34,10 +34,25 @@ final selectedShopIdProvider = StateProvider<String?>((ref) => null);
 
 final selectedTypeProvider = StateProvider<String>((ref) => 'delivery');
 
-final deliveriesProvider = StreamProvider.family<List<Delivery>, Map<String, String>>((ref, params) {
+// Add this class at the top of providers.dart
+class DeliveryQuery {
+  final String shopId;
+  final String type;
+  const DeliveryQuery({required this.shopId, required this.type});
+
+  @override
+  bool operator ==(Object other) =>
+      other is DeliveryQuery && other.shopId == shopId && other.type == type;
+
+  @override
+  int get hashCode => Object.hash(shopId, type);
+}
+
+// Replace deliveriesProvider with this
+final deliveriesProvider = StreamProvider.family<List<Delivery>, DeliveryQuery>((ref, query) {
   return ref.watch(firestoreServiceProvider).getDeliveries(
-    params['shopId']!,
-    params['type']!,
+    query.shopId,
+    query.type,
   );
 });
 
