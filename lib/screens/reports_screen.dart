@@ -82,7 +82,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha:0.6),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
@@ -117,7 +117,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha:0.6),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
@@ -203,7 +203,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               margin: const EdgeInsets.symmetric(horizontal: 16),
               padding: const EdgeInsets.all(16),
               decoration: AppTheme.glassDecoration(
-                color: AppTheme.primary.withOpacity(0.05),
+                color: AppTheme.primary.withValues(alpha:0.05),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -259,7 +259,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppTheme.primary.withOpacity(0.1),
+              color: AppTheme.primary.withValues(alpha:0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.menu_book_rounded,
@@ -301,7 +301,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                 padding: const EdgeInsets.symmetric(
                     horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppTheme.primary.withOpacity(0.1),
+                  color: AppTheme.primary.withValues(alpha:0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(

@@ -118,7 +118,7 @@ class _AddGroupScreenState extends ConsumerState<AddGroupScreen> {
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.6),
+                      fillColor: Colors.white.withValues(alpha:0.6),
                       prefixIcon: const Icon(Icons.group_work_rounded),
                     ),
                   ),

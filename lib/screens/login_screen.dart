@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:manorama_delivery/widgets/glass_background.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/providers.dart';
 import '../utils/app_theme.dart';
 import 'home_screen.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
@@ -37,6 +40,9 @@ class _LoginScreenState extends State<LoginScreen> {
         password: _passwordController.text.trim(),
       );
       if (mounted) {
+        ref.invalidate(shopsProvider);
+        ref.invalidate(groupsProvider);
+        ref.invalidate(booksProvider);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -54,18 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFE8F0FF),
-              Color(0xFFF2F2F7),
-              Color(0xFFE8F8FF),
-            ],
-          ),
-        ),
+    body: GlassBackground(
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -116,15 +111,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
-                            labelText: 'Email',
+                            labelText: 'Email',labelStyle: TextStyle(color: AppTheme.textSecondary),
                             prefixIcon: const Icon(Icons.mail_outline_rounded),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
                             ),
-                            filled: true,
-                            fillColor: Colors.white.withOpacity(0.6),
-                          ),
+                           filled: true,
+fillColor: Colors.white.withValues(alpha: 0.08),),
                         ),
                         const SizedBox(height: 16),
 
@@ -132,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
-                          decoration: InputDecoration(
+                          decoration: InputDecoration(labelStyle: TextStyle(color: AppTheme.textSecondary),
                             labelText: 'Password',
                             prefixIcon: const Icon(Icons.lock_outline_rounded),
                             suffixIcon: IconButton(
@@ -148,9 +142,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
                             ),
-                            filled: true,
-                            fillColor: Colors.white.withOpacity(0.6),
-                          ),
+                           filled: true,
+fillColor: Colors.white.withValues(alpha: 0.08), ),
                         ),
 
                         // Error message
@@ -159,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: AppTheme.danger.withOpacity(0.1),
+                              color: AppTheme.danger.withValues(alpha:0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(

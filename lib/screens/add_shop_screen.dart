@@ -124,7 +124,7 @@ class _AddShopScreenState extends ConsumerState<AddShopScreen> {
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.6),
+                      fillColor: Colors.white.withValues(alpha:0.6),
                       prefixIcon: const Icon(Icons.store_rounded),
                     ),
                   ),
@@ -169,7 +169,7 @@ class _AddShopScreenState extends ConsumerState<AddShopScreen> {
                             borderSide: BorderSide.none,
                           ),
                           filled: true,
-                          fillColor: Colors.white.withOpacity(0.6),
+                          fillColor: Colors.white.withValues(alpha:0.6),
                         ),
                         items: [
                           const DropdownMenuItem(

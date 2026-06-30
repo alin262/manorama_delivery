@@ -177,7 +177,7 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha:0.6),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -226,7 +226,7 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
                             borderSide: BorderSide.none,
                           ),
                           filled: true,
-                          fillColor: Colors.white.withOpacity(0.6),
+                          fillColor: Colors.white.withValues(alpha:0.6),
                           prefixIcon:
                               const Icon(Icons.menu_book_rounded),
                         ),
@@ -267,7 +267,7 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha:0.6),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -313,7 +313,7 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.6),
+                      fillColor: Colors.white.withValues(alpha:0.6),
                       prefixIcon: const Icon(Icons.numbers_rounded),
                     ),
                   ),
@@ -334,7 +334,7 @@ class _AddEntryScreenState extends ConsumerState<AddEntryScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha:0.6),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(

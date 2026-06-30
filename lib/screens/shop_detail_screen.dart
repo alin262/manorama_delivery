@@ -262,7 +262,7 @@ print('Shop ID: ${widget.shop.id}, Type: $type, State: $deliveriesAsync');
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: AppTheme.primary.withOpacity(0.1),
+                    color: AppTheme.primary.withValues(alpha:0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(Icons.menu_book_rounded,
@@ -299,7 +299,7 @@ print('Shop ID: ${widget.shop.id}, Type: $type, State: $deliveriesAsync');
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppTheme.primary.withOpacity(0.1),
+                        color: AppTheme.primary.withValues(alpha:0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(

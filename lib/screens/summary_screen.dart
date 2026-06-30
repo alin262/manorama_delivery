@@ -72,7 +72,7 @@ class _SummaryScreenState extends ConsumerState<SummaryScreen> {
                           borderSide: BorderSide.none,
                         ),
                         filled: true,
-                        fillColor: Colors.white.withOpacity(0.6),
+                        fillColor: Colors.white.withValues(alpha:0.6),
                         prefixIcon: const Icon(Icons.store_rounded),
                       ),
                       items: shops
@@ -234,7 +234,7 @@ class _SummaryScreenState extends ConsumerState<SummaryScreen> {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: AppTheme.glassDecoration(
-            color: AppTheme.primary.withOpacity(0.05),
+            color: AppTheme.primary.withValues(alpha:0.05),
           ),
           child: Column(
             children: [
@@ -255,14 +255,14 @@ class _SummaryScreenState extends ConsumerState<SummaryScreen> {
                   Container(
                     width: 1,
                     height: 40,
-                    color: AppTheme.textSecondary.withOpacity(0.2),
+                    color: AppTheme.textSecondary.withValues(alpha:0.2),
                   ),
                   _statColumn(
                       'Returned', totalReturned, AppTheme.warning),
                   Container(
                     width: 1,
                     height: 40,
-                    color: AppTheme.textSecondary.withOpacity(0.2),
+                    color: AppTheme.textSecondary.withValues(alpha:0.2),
                   ),
                   _statColumn(
                       'Net Sales', totalNetSales, AppTheme.success),

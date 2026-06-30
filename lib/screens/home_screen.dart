@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:manorama_delivery/screens/login_screen.dart';
 import '../providers/providers.dart';
 import '../utils/app_theme.dart';
 import '../widgets/sync_status_dot.dart';
@@ -13,6 +14,7 @@ import 'add_group_screen.dart';
 import 'add_book_screen.dart';
 import 'reports_screen.dart';
 import 'summary_screen.dart';
+import '../widgets/glass_background.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -30,8 +32,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      ref.read(selectedTypeProvider.notifier).state =
-          _tabController.index == 0 ? 'delivery' : 'return';
+      ref.read(selectedTypeProvider.notifier).state = _tabController.index == 0
+          ? 'delivery'
+          : 'return';
     });
   }
 
@@ -46,10 +49,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
-        decoration: AppTheme.glassDecoration(
-          borderRadius: 24,
-          color: Colors.white,
-        ),
+        decoration: AppTheme.glassDecoration(borderRadius: 24),
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -58,7 +58,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppTheme.textSecondary.withOpacity(0.3),
+                color: AppTheme.textSecondary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -78,8 +78,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               color: AppTheme.primary,
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const AddShopScreen()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AddShopScreen()),
+                );
               },
             ),
             const SizedBox(height: 12),
@@ -90,8 +92,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               color: const Color(0xFF5856D6),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const AddGroupScreen()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AddGroupScreen()),
+                );
               },
             ),
             const SizedBox(height: 12),
@@ -102,8 +106,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               color: const Color(0xFF34C759),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const AddBookScreen()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AddBookScreen()),
+                );
               },
             ),
             const SizedBox(height: 24),
@@ -126,7 +132,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         padding: const EdgeInsets.all(16),
         decoration: AppTheme.glassDecoration(
           borderRadius: 12,
-          color: color.withOpacity(0.05),
+          color: color.withValues(alpha: 0.05),
         ),
         child: Row(
           children: [
@@ -134,7 +140,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 22),
@@ -161,8 +167,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               ],
             ),
             const Spacer(),
-            Icon(Icons.chevron_right_rounded,
-                color: AppTheme.textSecondary),
+            Icon(Icons.chevron_right_rounded, color: AppTheme.textSecondary),
           ],
         ),
       ),
@@ -176,33 +181,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         title: Text(
           'Manorama Delivery',
-          style: GoogleFonts.inter(
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-          ),
+          style: GoogleFonts.inter(fontSize: 17, fontWeight: FontWeight.w600),
         ),
-        actions: [ IconButton(
-    icon: const Icon(Icons.calendar_view_month_rounded),
-    onPressed: () => Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const SummaryScreen()),
-    ),
-  ),
-  IconButton(
-    icon: const Icon(Icons.bar_chart_rounded),
-    onPressed: () => Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const ReportsScreen()),
-    ),
-  ),IconButton(
-    icon: const Icon(Icons.bar_chart_rounded),
-    onPressed: () => Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const ReportsScreen()),
-    ),
-  ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.calendar_view_month_rounded),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const SummaryScreen()),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.bar_chart_rounded),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ReportsScreen()),
+            ),
+          ),
           const Padding(
             padding: EdgeInsets.only(right: 8),
             child: Center(child: SyncStatusDot()),
@@ -212,7 +211,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
               if (context.mounted) {
-                Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                );
               }
             },
           ),
@@ -228,12 +230,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           unselectedLabelColor: AppTheme.textSecondary,
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildShopList(shopsAsync, groupsAsync, 'delivery'),
-          _buildShopList(shopsAsync, groupsAsync, 'return'),
-        ],
+      body: GlassBackground(
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildShopList(shopsAsync, groupsAsync, 'delivery'),
+            _buildShopList(shopsAsync, groupsAsync, 'return'),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddOptions(context),
@@ -243,8 +247,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  Widget _buildShopList(AsyncValue<List<Shop>> shopsAsync, 
-    AsyncValue<List<ShopGroup>> groupsAsync, String type) {
+  Widget _buildShopList(
+    AsyncValue<List<Shop>> shopsAsync,
+    AsyncValue<List<ShopGroup>> groupsAsync,
+    String type,
+  ) {
     return shopsAsync.when(
       data: (shops) {
         return groupsAsync.when(
@@ -254,8 +261,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.store_outlined,
-                        size: 64, color: AppTheme.textSecondary),
+                    Icon(
+                      Icons.store_outlined,
+                      size: 64,
+                      color: AppTheme.textSecondary,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       'No shops yet',
@@ -349,8 +359,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, true),
-                  child: const Text('Delete',
-                      style: TextStyle(color: AppTheme.danger)),
+                  child: const Text(
+                    'Delete',
+                    style: TextStyle(color: AppTheme.danger),
+                  ),
                 ),
               ],
             ),
@@ -366,20 +378,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               builder: (_) => ShopDetailScreen(shop: shop, type: type),
             ),
           ),
-          child: Container(
+          child: AppTheme.glassCard(
             padding: const EdgeInsets.all(16),
-            decoration: AppTheme.glassDecoration(),
             child: Row(
               children: [
                 Container(
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: AppTheme.primary.withOpacity(0.1),
+                    color: AppTheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.store_rounded,
-                      color: AppTheme.primary, size: 22),
+                  child: const Icon(
+                    Icons.store_rounded,
+                    color: AppTheme.primary,
+                    size: 22,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -392,8 +406,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     ),
                   ),
                 ),
-                const Icon(Icons.chevron_right_rounded,
-                    color: AppTheme.textSecondary),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppTheme.textSecondary,
+                ),
               ],
             ),
           ),
@@ -407,22 +423,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       padding: const EdgeInsets.only(bottom: 10),
       child: GestureDetector(
         onTap: () {},
-        child: Container(
+        child: AppTheme.glassCard(
           padding: const EdgeInsets.all(16),
-          decoration: AppTheme.glassDecoration(
-            color: const Color(0xFF5856D6).withOpacity(0.05),
-          ),
+          color: const Color(0xFF5856D6).withValues(alpha: 0.05),
           child: Row(
             children: [
               Container(
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF5856D6).withOpacity(0.1),
+                  color: const Color(0xFF5856D6).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.group_work_rounded,
-                    color: Color(0xFF5856D6), size: 22),
+                child: const Icon(
+                  Icons.group_work_rounded,
+                  color: Color(0xFF5856D6),
+                  size: 22,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -447,8 +464,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded,
-                  color: AppTheme.textSecondary),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AppTheme.textSecondary,
+              ),
             ],
           ),
         ),
