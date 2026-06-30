@@ -41,7 +41,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
       if (mounted) {
         ref.invalidate(shopsProvider);
-        ref.invalidate(groupsProvider);
         ref.invalidate(booksProvider);
         Navigator.pushReplacement(
           context,

@@ -6,7 +6,7 @@ import '../providers/providers.dart';
 import '../utils/app_theme.dart';
 
 class AddShopScreen extends ConsumerStatefulWidget {
-  final Shop? shop; // if editing existing shop
+  final Shop? shop;
   const AddShopScreen({super.key, this.shop});
 
   @override
@@ -15,16 +15,13 @@ class AddShopScreen extends ConsumerStatefulWidget {
 
 class _AddShopScreenState extends ConsumerState<AddShopScreen> {
   final _nameController = TextEditingController();
-  String? _selectedGroupId;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    // Pre-fill if editing
     if (widget.shop != null) {
       _nameController.text = widget.shop!.name;
-      _selectedGroupId = widget.shop!.groupId;
     }
   }
 
@@ -50,7 +47,6 @@ class _AddShopScreenState extends ConsumerState<AddShopScreen> {
       final shop = Shop(
         id: widget.shop?.id ?? '',
         name: _nameController.text.trim(),
-        groupId: _selectedGroupId,
       );
 
       if (widget.shop == null) {
@@ -89,8 +85,6 @@ class _AddShopScreenState extends ConsumerState<AddShopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final groupsAsync = ref.watch(groupsProvider);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.shop == null ? 'Add Shop' : 'Edit Shop'),
@@ -99,7 +93,6 @@ class _AddShopScreenState extends ConsumerState<AddShopScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Shop name field
             Container(
               decoration: AppTheme.glassDecoration(),
               padding: const EdgeInsets.all(16),
@@ -124,76 +117,14 @@ class _AddShopScreenState extends ConsumerState<AddShopScreen> {
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: Colors.white.withValues(alpha:0.6),
+                      fillColor: Colors.white.withValues(alpha: 0.08),
                       prefixIcon: const Icon(Icons.store_rounded),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-
-            // Group selection
-            Container(
-              decoration: AppTheme.glassDecoration(),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Group (Optional)',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textSecondary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  groupsAsync.when(
-                    data: (groups) {
-                      if (groups.isEmpty) {
-                        return Text(
-                          'No groups yet — add a group first',
-                          style: GoogleFonts.inter(
-                            color: AppTheme.textSecondary,
-                            fontSize: 14,
-                          ),
-                        );
-                      }
-                      return DropdownButtonFormField<String>(
-                        value: _selectedGroupId,
-                        hint: const Text('Select a group'),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.white.withValues(alpha:0.6),
-                        ),
-                        items: [
-                          const DropdownMenuItem(
-                            value: null,
-                            child: Text('No group'),
-                          ),
-                          ...groups.map((g) => DropdownMenuItem(
-                                value: g.id,
-                                child: Text(g.name),
-                              )),
-                        ],
-                        onChanged: (value) =>
-                            setState(() => _selectedGroupId = value),
-                      );
-                    },
-                    loading: () => const CircularProgressIndicator(),
-                    error: (e, _) => Text('Error: $e'),
-                  ),
-                ],
-              ),
-            ),
             const SizedBox(height: 24),
-
-            // Save button
             SizedBox(
               width: double.infinity,
               height: 50,

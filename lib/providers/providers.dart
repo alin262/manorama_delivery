@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/shop.dart';
-import '../models/group.dart';
 import '../models/book.dart';
 import '../models/delivery.dart';
 import '../services/firestore_service.dart';
@@ -81,10 +80,6 @@ class DateRangeQuery {
 
 final shopsProvider = StreamProvider<List<Shop>>((ref) {
   return ref.watch(firestoreServiceProvider).getShops();
-});
-
-final groupsProvider = StreamProvider<List<ShopGroup>>((ref) {
-  return ref.watch(firestoreServiceProvider).getGroups();
 });
 
 final booksProvider = StreamProvider<List<Book>>((ref) {

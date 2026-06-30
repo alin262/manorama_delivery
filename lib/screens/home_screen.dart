@@ -7,10 +7,8 @@ import '../providers/providers.dart';
 import '../utils/app_theme.dart';
 import '../widgets/sync_status_dot.dart';
 import '../models/shop.dart';
-import '../models/group.dart';
 import 'shop_detail_screen.dart';
 import 'add_shop_screen.dart';
-import 'add_group_screen.dart';
 import 'add_book_screen.dart';
 import 'reports_screen.dart';
 import 'summary_screen.dart';
@@ -32,9 +30,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      ref.read(selectedTypeProvider.notifier).state = _tabController.index == 0
-          ? 'delivery'
-          : 'return';
+      ref.read(selectedTypeProvider.notifier).state =
+          _tabController.index == 0 ? 'delivery' : 'return';
     });
   }
 
@@ -81,20 +78,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const AddShopScreen()),
-                );
-              },
-            ),
-            const SizedBox(height: 12),
-            _addOption(
-              icon: Icons.group_work_rounded,
-              title: 'Add Group',
-              subtitle: 'Group multiple shops together',
-              color: const Color(0xFF5856D6),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AddGroupScreen()),
                 );
               },
             ),
@@ -177,7 +160,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final shopsAsync = ref.watch(shopsProvider);
-    final groupsAsync = ref.watch(groupsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -234,8 +216,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
-            _buildShopList(shopsAsync, groupsAsync, 'delivery'),
-            _buildShopList(shopsAsync, groupsAsync, 'return'),
+            _buildShopList(shopsAsync, 'delivery'),
+            _buildShopList(shopsAsync, 'return'),
           ],
         ),
       ),
@@ -247,83 +229,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  Widget _buildShopList(
-    AsyncValue<List<Shop>> shopsAsync,
-    AsyncValue<List<ShopGroup>> groupsAsync,
-    String type,
-  ) {
+  Widget _buildShopList(AsyncValue<List<Shop>> shopsAsync, String type) {
     return shopsAsync.when(
       data: (shops) {
-        return groupsAsync.when(
-          data: (groups) {
-            if (shops.isEmpty && groups.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.store_outlined,
-                      size: 64,
-                      color: AppTheme.textSecondary,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'No shops yet',
-                      style: GoogleFonts.inter(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.textSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Tap + to add your first shop',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: AppTheme.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            return ListView(
-              padding: const EdgeInsets.all(16),
+        if (shops.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Groups section
-                if (groups.isNotEmpty) ...[
-                  Text(
-                    'Groups',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textSecondary,
-                    ),
+                Icon(
+                  Icons.store_outlined,
+                  size: 64,
+                  color: AppTheme.textSecondary,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'No shops yet',
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textSecondary,
                   ),
-                  const SizedBox(height: 8),
-                  ...groups.map((group) => _buildGroupCard(group, type)),
-                  const SizedBox(height: 16),
-                ],
-
-                // Individual shops section
-                if (shops.isNotEmpty) ...[
-                  Text(
-                    'Shops',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textSecondary,
-                    ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Tap + to add your first shop',
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    color: AppTheme.textSecondary,
                   ),
-                  const SizedBox(height: 8),
-                  ...shops.map((shop) => _buildShopCard(shop, type)),
-                ],
+                ),
               ],
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Error: $e')),
+            ),
+          );
+        }
+
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            ...shops.map((shop) => _buildShopCard(shop, type)),
+          ],
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -412,63 +357,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGroupCard(ShopGroup group, String type) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: GestureDetector(
-        onTap: () {},
-        child: AppTheme.glassCard(
-          padding: const EdgeInsets.all(16),
-          color: const Color(0xFF5856D6).withValues(alpha: 0.05),
-          child: Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF5856D6).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.group_work_rounded,
-                  color: Color(0xFF5856D6),
-                  size: 22,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      group.name,
-                      style: GoogleFonts.inter(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: AppTheme.textPrimary,
-                      ),
-                    ),
-                    Text(
-                      '${group.shopIds.length} shops',
-                      style: GoogleFonts.inter(
-                        fontSize: 13,
-                        color: AppTheme.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: AppTheme.textSecondary,
-              ),
-            ],
           ),
         ),
       ),

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:manorama_delivery/models/book.dart';
 import 'package:manorama_delivery/models/delivery.dart';
-import 'package:manorama_delivery/models/group.dart';
 import 'package:manorama_delivery/models/shop.dart';
 
 class FirestoreService {
@@ -28,29 +27,6 @@ class FirestoreService {
 
   Future<void> deleteShop(String shopId) async {
     await _db.collection('shops').doc(shopId).delete();
-  }
-
-  Stream<List<ShopGroup>> getGroups() {
-    return _db
-        .collection('groups')
-        .snapshots()
-        .map(
-          (snaps) => snaps.docs
-              .map((doc) => ShopGroup.fromFirestore(doc.data(), doc.id))
-              .toList(),
-        );
-  }
-
-  Future<void> addGroup(ShopGroup group) async {
-    await _db.collection('groups').add(group.toFirestore());
-  }
-
-  Future<void> updateGroup(ShopGroup group) async {
-    await _db.collection('groups').doc(group.id).update(group.toFirestore());
-  }
-
-  Future<void> deleteGroup(String groupId) async {
-    await _db.collection('groups').doc(groupId).delete();
   }
 
   Stream<List<Book>> getBooks() {
@@ -121,17 +97,18 @@ class FirestoreService {
               .toList(),
         );
   }
+
   Stream<List<Delivery>> getDeliveriesByShopAndMonth(
     String shopId, DateTime monthStart, DateTime monthEnd, String type) {
-  return _db
-      .collection('deliveries')
-      .where('shopId', isEqualTo: shopId)
-      .where('type', isEqualTo: type)
-      .where('issueDate', isGreaterThanOrEqualTo: monthStart.toIso8601String())
-      .where('issueDate', isLessThanOrEqualTo: monthEnd.toIso8601String())
-      .snapshots()
-      .map((snaps) => snaps.docs
-          .map((e) => Delivery.fromFirestore(e.data(), e.id))
-          .toList());
-}
+    return _db
+        .collection('deliveries')
+        .where('shopId', isEqualTo: shopId)
+        .where('type', isEqualTo: type)
+        .where('issueDate', isGreaterThanOrEqualTo: monthStart.toIso8601String())
+        .where('issueDate', isLessThanOrEqualTo: monthEnd.toIso8601String())
+        .snapshots()
+        .map((snaps) => snaps.docs
+            .map((e) => Delivery.fromFirestore(e.data(), e.id))
+            .toList());
+  }
 }
