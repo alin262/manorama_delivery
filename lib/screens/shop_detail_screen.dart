@@ -29,10 +29,14 @@ class _ShopDetailScreenState extends ConsumerState<ShopDetailScreen>
   DateTime? _filterDate;
 
   @override
-  void initState() {
+void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: widget.type == 'return' ? 1 : 0,
+    );
+}
 
   @override
   void dispose() {
