@@ -12,6 +12,7 @@ import 'add_shop_screen.dart';
 import 'add_group_screen.dart';
 import 'add_book_screen.dart';
 import 'reports_screen.dart';
+import 'summary_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -182,7 +183,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             fontWeight: FontWeight.w600,
           ),
         ),
-        actions: [IconButton(
+        actions: [ IconButton(
+    icon: const Icon(Icons.calendar_view_month_rounded),
+    onPressed: () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SummaryScreen()),
+    ),
+  ),
+  IconButton(
+    icon: const Icon(Icons.bar_chart_rounded),
+    onPressed: () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ReportsScreen()),
+    ),
+  ),IconButton(
     icon: const Icon(Icons.bar_chart_rounded),
     onPressed: () => Navigator.push(
       context,

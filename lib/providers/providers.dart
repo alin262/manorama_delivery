@@ -5,7 +5,6 @@ import '../models/book.dart';
 import '../models/delivery.dart';
 import '../services/firestore_service.dart';
 
-
 class DeliveryQuery {
   final String shopId;
   final String type;
@@ -23,7 +22,42 @@ final firestoreServiceProvider = Provider<FirestoreService>((ref) {
   return FirestoreService();
 });
 
-// Add this class
+class ShopMonthQuery {
+  final String shopId;
+  final DateTime monthStart;
+  final DateTime monthEnd;
+  final String type;
+  const ShopMonthQuery({
+    required this.shopId,
+    required this.monthStart,
+    required this.monthEnd,
+    required this.type,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      other is ShopMonthQuery &&
+      other.shopId == shopId &&
+      other.monthStart == monthStart &&
+      other.monthEnd == monthEnd &&
+      other.type == type;
+
+  @override
+  int get hashCode => Object.hash(shopId, monthStart, monthEnd, type);
+}
+
+final shopMonthlyDeliveriesProvider =
+    StreamProvider.family<List<Delivery>, ShopMonthQuery>((ref, query) {
+      return ref
+          .watch(firestoreServiceProvider)
+          .getDeliveriesByShopAndMonth(
+            query.shopId,
+            query.monthStart,
+            query.monthEnd,
+            query.type,
+          );
+    });
+
 class DateRangeQuery {
   final DateTime start;
   final DateTime end;
@@ -45,48 +79,38 @@ class DateRangeQuery {
   int get hashCode => Object.hash(start, end, type);
 }
 
-
-
 final shopsProvider = StreamProvider<List<Shop>>((ref) {
   return ref.watch(firestoreServiceProvider).getShops();
 });
-
-
 
 final groupsProvider = StreamProvider<List<ShopGroup>>((ref) {
   return ref.watch(firestoreServiceProvider).getGroups();
 });
 
-
-
 final booksProvider = StreamProvider<List<Book>>((ref) {
   return ref.watch(firestoreServiceProvider).getBooks();
 });
 
-
 final selectedShopIdProvider = StateProvider<String?>((ref) => null);
-
 
 final selectedTypeProvider = StateProvider<String>((ref) => 'delivery');
 
-
-final deliveriesProvider = StreamProvider.family<List<Delivery>, DeliveryQuery>((ref, query) {
-  return ref.watch(firestoreServiceProvider).getDeliveries(
-    query.shopId,
-    query.type,
-  );
-});
+final deliveriesProvider = StreamProvider.family<List<Delivery>, DeliveryQuery>(
+  (ref, query) {
+    return ref
+        .watch(firestoreServiceProvider)
+        .getDeliveries(query.shopId, query.type);
+  },
+);
 
 final startDateProvider = StateProvider<DateTime?>((ref) => null);
 final endDateProvider = StateProvider<DateTime?>((ref) => null);
 
 final deliveriesByDateRangeProvider =
     StreamProvider.family<List<Delivery>, DateRangeQuery>((ref, query) {
-  return ref.watch(firestoreServiceProvider).getDeliveriesByDateRange(
-        query.start,
-        query.end,
-        query.type,
-      );
-});
+      return ref
+          .watch(firestoreServiceProvider)
+          .getDeliveriesByDateRange(query.start, query.end, query.type);
+    });
 
 final syncStatusProvider = StateProvider<String>((ref) => 'idle');

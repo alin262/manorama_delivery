@@ -121,4 +121,17 @@ class FirestoreService {
               .toList(),
         );
   }
+  Stream<List<Delivery>> getDeliveriesByShopAndMonth(
+    String shopId, DateTime monthStart, DateTime monthEnd, String type) {
+  return _db
+      .collection('deliveries')
+      .where('shopId', isEqualTo: shopId)
+      .where('type', isEqualTo: type)
+      .where('issueDate', isGreaterThanOrEqualTo: monthStart.toIso8601String())
+      .where('issueDate', isLessThanOrEqualTo: monthEnd.toIso8601String())
+      .snapshots()
+      .map((snaps) => snaps.docs
+          .map((e) => Delivery.fromFirestore(e.data(), e.id))
+          .toList());
+}
 }
