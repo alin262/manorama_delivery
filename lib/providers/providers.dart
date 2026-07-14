@@ -4,6 +4,28 @@ import '../models/book.dart';
 import '../models/delivery.dart';
 import '../services/firestore_service.dart';
 
+class DateDeliveryQuery {
+  final String date;
+  final String type;
+  const DateDeliveryQuery({required this.date, required this.type});
+
+  @override
+  bool operator ==(Object other) =>
+      other is DateDeliveryQuery &&
+      other.date == date &&
+      other.type == type;
+
+  @override
+  int get hashCode => Object.hash(date, type);
+}
+
+final dateDeliveryProvider =
+    StreamProvider.family<List<Delivery>, DateDeliveryQuery>((ref, query) {
+  return ref
+      .watch(firestoreServiceProvider)
+      .getDeliveriesByDate(query.date, query.type);
+});
+
 class DeliveryQuery {
   final String shopId;
   final String type;

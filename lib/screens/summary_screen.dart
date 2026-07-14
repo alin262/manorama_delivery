@@ -185,16 +185,26 @@ class _SummaryScreenState extends ConsumerState<SummaryScreen> {
   }
 
   Widget _buildSummaryContent(List deliveries, List returns) {
-    final bookData = <String, Map<String, int>>{};
+    // Build per-book data
+    final bookData = <String, Map<String, dynamic>>{};
 
     for (final d in deliveries) {
-      bookData.putIfAbsent(d.bookName, () => {'delivered': 0, 'returned': 0});
+      bookData.putIfAbsent(d.bookName, () => {
+        'delivered': 0,
+        'returned': 0,
+        'shops': <String>{},
+      });
       bookData[d.bookName]!['delivered'] =
           (bookData[d.bookName]!['delivered'] ?? 0) + (d.quantity as int);
+      (bookData[d.bookName]!['shops'] as Set<String>).add(d.shopId);
     }
 
     for (final r in returns) {
-      bookData.putIfAbsent(r.bookName, () => {'delivered': 0, 'returned': 0});
+      bookData.putIfAbsent(r.bookName, () => {
+        'delivered': 0,
+        'returned': 0,
+        'shops': <String>{},
+      });
       bookData[r.bookName]!['returned'] =
           (bookData[r.bookName]!['returned'] ?? 0) + (r.quantity as int);
     }
@@ -223,18 +233,19 @@ class _SummaryScreenState extends ConsumerState<SummaryScreen> {
     int totalDelivered = 0;
     int totalReturned = 0;
     for (final data in bookData.values) {
-      totalDelivered += data['delivered']!;
-      totalReturned += data['returned']!;
+      totalDelivered += data['delivered'] as int;
+      totalReturned += data['returned'] as int;
     }
     final totalNetSales = totalDelivered - totalReturned;
 
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       children: [
+        // Overall summary card
         Container(
           padding: const EdgeInsets.all(20),
           decoration: AppTheme.glassDecoration(
-            color: AppTheme.primary.withValues(alpha:0.05),
+            color: AppTheme.primary.withValues(alpha: 0.05),
           ),
           child: Column(
             children: [
@@ -250,69 +261,138 @@ class _SummaryScreenState extends ConsumerState<SummaryScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _statColumn(
-                      'Delivered', totalDelivered, AppTheme.primary),
-                  Container(
-                    width: 1,
-                    height: 40,
-                    color: AppTheme.textSecondary.withValues(alpha:0.2),
-                  ),
-                  _statColumn(
-                      'Returned', totalReturned, AppTheme.warning),
-                  Container(
-                    width: 1,
-                    height: 40,
-                    color: AppTheme.textSecondary.withValues(alpha:0.2),
-                  ),
-                  _statColumn(
-                      'Net Sales', totalNetSales, AppTheme.success),
+                  _statColumn('Supplied', totalDelivered, AppTheme.primary),
+                  Container(width: 1, height: 40,
+                      color: AppTheme.textSecondary.withValues(alpha: 0.2)),
+                  _statColumn('Returned', totalReturned, AppTheme.warning),
+                  Container(width: 1, height: 40,
+                      color: AppTheme.textSecondary.withValues(alpha: 0.2)),
+                  _statColumn('Sale', totalNetSales, AppTheme.success),
                 ],
               ),
             ],
           ),
         ),
         const SizedBox(height: 16),
-        Text(
-          'By Book',
-          style: GoogleFonts.inter(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: AppTheme.textSecondary,
-          ),
-        ),
-        const SizedBox(height: 8),
-        ...bookData.entries.map((entry) {
-          final delivered = entry.value['delivered']!;
-          final returned = entry.value['returned']!;
-          final netSales = delivered - returned;
 
-          return Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.all(16),
-            decoration: AppTheme.glassDecoration(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  entry.key,
+        // Table header
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: AppTheme.glassDecoration(
+            color: AppTheme.primary.withValues(alpha: 0.08),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Text(
+                  'Magazine',
                   style: GoogleFonts.inter(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.primary,
                   ),
                 ),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _miniStat('Delivered', delivered, AppTheme.primary),
-                    _miniStat('Returned', returned, AppTheme.warning),
-                    _miniStat('Net', netSales, AppTheme.success),
-                  ],
+              ),
+              Expanded(
+                child: Text(
+                  'Shops',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.primary,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  'Supplied',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.primary,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  'Sale',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.success,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 4),
+
+        // Table rows
+        ...bookData.entries.map((entry) {
+          final delivered = entry.value['delivered'] as int;
+          final returned = entry.value['returned'] as int;
+          final netSales = delivered - returned;
+          final shops = (entry.value['shops'] as Set<String>).length;
+
+          return Container(
+            margin: const EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: AppTheme.glassDecoration(),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    entry.key,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    shops.toString(),
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      color: AppTheme.textSecondary,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    delivered.toString(),
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      color: AppTheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    netSales.toString(),
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.success,
+                    ),
+                  ),
                 ),
               ],
             ),
           );
         }),
+        const SizedBox(height: 16),
       ],
     );
   }

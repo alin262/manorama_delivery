@@ -12,6 +12,7 @@ import 'add_shop_screen.dart';
 import 'add_book_screen.dart';
 import 'reports_screen.dart';
 import 'summary_screen.dart';
+import 'date_summary_screen.dart';
 import '../widgets/glass_background.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -30,8 +31,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      ref.read(selectedTypeProvider.notifier).state =
-          _tabController.index == 0 ? 'delivery' : 'return';
+      ref.read(selectedTypeProvider.notifier).state = _tabController.index == 0
+          ? 'delivery'
+          : 'return';
     });
   }
 
@@ -171,6 +173,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.today_rounded),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const DateSummaryScreen()),
+            ),
+          ),
+          IconButton(
             icon: const Icon(Icons.calendar_view_month_rounded),
             onPressed: () => Navigator.push(
               context,
@@ -266,9 +275,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
         return ListView(
           padding: const EdgeInsets.all(16),
-          children: [
-            ...shops.map((shop) => _buildShopCard(shop, type)),
-          ],
+          children: [...shops.map((shop) => _buildShopCard(shop, type))],
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),

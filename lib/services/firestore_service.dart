@@ -6,6 +6,19 @@ import 'package:manorama_delivery/models/shop.dart';
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+
+Stream<List<Delivery>> getDeliveriesByDate(String date, String type) {
+  return _db
+      .collection('deliveries')
+      .where('type', isEqualTo: type)
+      .where('deliveryDate', isGreaterThanOrEqualTo: date)
+      .where('deliveryDate', isLessThanOrEqualTo: date + 'z')
+      .snapshots()
+      .map((snaps) => snaps.docs
+          .map((e) => Delivery.fromFirestore(e.data(), e.id))
+          .toList());
+}
+
   Stream<List<Shop>> getShops() {
     return _db
         .collection('shops')
